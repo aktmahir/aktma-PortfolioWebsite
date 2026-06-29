@@ -152,7 +152,6 @@ export default function App() {
         name={CONFIG.name}
         initials={CONFIG.initials}
         resumeUrl={CONFIG.resumeUrl}
-        social={CONFIG.social}
       />
       <main>
         <HeroSection
