@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Disallow private and API paths
+Disallow: /private/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://aktma.dev/sitemap.xml
+
+# Crawl delay for polite crawling
+Crawl-delay: 1

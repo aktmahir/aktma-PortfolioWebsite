@@ -4,6 +4,7 @@ import {
   ExternalLink,
   Github,
 } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 interface Project {
   title: string;
@@ -29,6 +30,11 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
     ? projects
     : projects.filter(p => p.category === activeFilter);
 
+  const handleFilterClick = (filter: string) => {
+    setActiveFilter(filter);
+    trackEvent('projects_filter_click', { filter_category: filter });
+  };
+
   return (
     <section id="projects" className="relative py-24 md:py-32 bg-slate-900/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,7 +54,8 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
             {filters.map((filter) => (
               <button
                 key={filter}
-                onClick={() => setActiveFilter(filter)}
+                onClick={() => handleFilterClick(filter)}
+                aria-label={`Filter by ${filter}`}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   activeFilter === filter
                     ? 'bg-primary-600 text-white'
@@ -112,6 +119,9 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                     <div className="flex gap-3">
                       <a
                         href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackEvent('project_click', { project_title: project.title, link_type: 'live_demo' })}
                         className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white text-sm rounded-lg transition-colors"
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -119,6 +129,9 @@ export default function ProjectsSection({ projects }: ProjectsSectionProps) {
                       </a>
                       <a
                         href={project.codeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackEvent('project_click', { project_title: project.title, link_type: 'source' })}
                         className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 text-sm rounded-lg border border-slate-700 transition-colors"
                       >
                         <Github className="w-4 h-4" />

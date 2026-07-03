@@ -73,6 +73,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
               <button
                 key={i}
                 onClick={() => setCurrentIndex(i)}
+                aria-label={`Go to testimonial ${i + 1}`}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   i === currentIndex
                     ? 'bg-primary-500 w-8'

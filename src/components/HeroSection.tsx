@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import TechConstellation from './TechConstellation';
+import { trackEvent } from '../utils/analytics';
 
 interface HeroSectionProps {
   title: string;
@@ -14,6 +15,9 @@ export default function HeroSection({ title, tagline, subtitle }: HeroSectionPro
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  const handleViewWorkClick = () => trackEvent('cta_click', { button: 'view_work' });
+  const handleGetInTouchClick = () => trackEvent('cta_click', { button: 'get_in_touch' });
 
   return (
     <section
@@ -71,6 +75,7 @@ export default function HeroSection({ title, tagline, subtitle }: HeroSectionPro
         >
           <a
             href="#projects"
+            onClick={handleViewWorkClick}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25"
           >
             View Work
@@ -78,6 +83,7 @@ export default function HeroSection({ title, tagline, subtitle }: HeroSectionPro
           </a>
           <a
             href="#contact"
+            onClick={handleGetInTouchClick}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold rounded-xl border border-slate-700 hover:border-primary-500/50 transition-all duration-300"
           >
             Get in Touch

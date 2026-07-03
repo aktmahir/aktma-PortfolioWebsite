@@ -21,6 +21,26 @@ npm run preview
 3. Vercel auto-detects Vite. Build command: `npm run build`. Output directory: `dist`.
 4. Configure `vercel.json` in this repo to enforce security headers automatically.
 
+### Environment
+- `VITE_GA_ID`: Required for Google Analytics tracking to initialize.
+- `NETLIFY_AUTH_TOKEN`: Required for Netlify deployment via GitHub Actions.
+- `NETLIFY_SITE_ID`: Required for Netlify deployment via GitHub Actions.
+- `public/resume.pdf`: A placeholder resume file exists now; replace it with your actual resume before launch.
+- The contact form is configured with Netlify form handling and will not work automatically on Vercel or GitHub Pages without additional backend support.
+
+### Launch checklist
+- Replace `public/resume.pdf` with your real resume before deployment.
+- Confirm `VITE_GA_ID` is set in the chosen deployment environment.
+- Verify Netlify secrets are configured before using the GitHub Actions Netlify deploy path.
+- Validate that the contact form works on the chosen host and that Netlify form handling is active if using Netlify.
+- Run accessibility tests and check for critical form usability issues.
+
+### Launch success metrics
+- Contact form submissions and outreach conversions
+- Page speed and Core Web Vitals within target range
+- Accessibility audit score with zero critical WCAG failures
+- Deployment success rate on the chosen hosting provider
+
 ### Netlify
 1. Build command: `npm run build`
 2. Publish directory: `dist`

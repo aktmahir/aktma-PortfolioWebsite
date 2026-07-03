@@ -1,6 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  safelist: [
+    'bg-primary-600', 'bg-primary-500', 'bg-primary-400', 'bg-primary-700',
+    'text-primary-400', 'text-primary-500', 'text-primary-600',
+    'border-primary-500', 'border-primary-500/50',
+    'border-red-500', 'focus:border-red-500',
+    'text-red-400', 'text-green-400',
+    'bg-slate-800', 'bg-slate-700', 'bg-slate-900/50', 'bg-slate-900/95',
+    'bg-slate-800/50', 'bg-slate-800/80',
+    'text-slate-100', 'text-slate-300', 'text-slate-400', 'text-slate-500',
+    'border-slate-700', 'border-slate-800', 'border-slate-800/50', 'border-slate-800/95',
+    'bg-cyan-500', 'text-cyan-400',
+    'shadow-primary-500/25', 'shadow-primary-500/10',
+    'hover:border-primary-500/50', 'hover:shadow-primary-500/25', 'hover:shadow-primary-500/10',
+  ],
   theme: {
     extend: {
       fontFamily: {

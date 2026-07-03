@@ -9,7 +9,7 @@ const CONFIG = {
   subtitle: 'Senior Software Engineer specializing in Full-Stack Systems & Cloud Architecture. Crafting clean, maintainable code guided by SOLID principles and robust infrastructure.',
   location: 'Istanbul, Turkey',
   email: 'aktmahir@gmail.com',
-  resumeUrl: '#',
+  resumeUrl: '/resume.pdf',
   social: {
     github: 'https://github.com/aktma',
     linkedin: 'https://linkedin.com/in/mahiraktas',
@@ -67,8 +67,8 @@ const CONFIG = {
       category: 'Full-Stack',
       description: 'Enterprise-grade SaaS platform with real-time collaboration features. Handles millions of concurrent connections with sub-100ms latency.',
       tech: ['React', 'Node.js', 'PostgreSQL', 'Redis', 'Docker'],
-      liveUrl: '#',
-      codeUrl: '#',
+      liveUrl: 'https://github.com/aktma/nexus-platform',
+      codeUrl: 'https://github.com/aktma/nexus-platform',
       image: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=800'
     },
     {
@@ -76,8 +76,8 @@ const CONFIG = {
       category: 'Simulations/Graphics',
       description: 'High-performance physics simulation engine for scientific computing. Supports GPU acceleration and distributed computing.',
       tech: ['C#', '.NET 8', 'Unity3D', 'CUDA', 'Docker'],
-      liveUrl: '#',
-      codeUrl: '#',
+      liveUrl: 'https://github.com/aktma/photon-engine',
+      codeUrl: 'https://github.com/aktma/photon-engine',
       image: 'https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=800'
     },
     {
@@ -85,8 +85,8 @@ const CONFIG = {
       category: 'Cloud & DevOps',
       description: 'Infrastructure-as-Code solution for multi-cloud deployments. Automates provisioning across AWS, Azure, and GCP.',
       tech: ['Terraform', 'Kubernetes', 'Helm', 'ArgoCD', 'Prometheus'],
-      liveUrl: '#',
-      codeUrl: '#',
+      liveUrl: 'https://github.com/aktma/terraforge',
+      codeUrl: 'https://github.com/aktma/terraforge',
       image: 'https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg?auto=compress&cs=tinysrgb&w=800'
     },
     {
@@ -94,8 +94,8 @@ const CONFIG = {
       category: 'Full-Stack',
       description: 'High-throughput API gateway with intelligent routing, rate limiting, and real-time analytics dashboard.',
       tech: ['Go', 'gRPC', 'Redis', 'Grafana', 'Kubernetes'],
-      liveUrl: '#',
-      codeUrl: '#',
+      liveUrl: 'https://github.com/aktma/velocity-gateway',
+      codeUrl: 'https://github.com/aktma/velocity-gateway',
       image: 'https://images.pexels.com/photos/607812/pexels-photo-607812.jpeg?auto=compress&cs=tinysrgb&w=800'
     },
     {
@@ -103,8 +103,8 @@ const CONFIG = {
       category: 'Cloud & DevOps',
       description: 'Event-driven data processing pipeline handling 500K+ events/second with exactly-once delivery guarantees.',
       tech: ['Kafka', 'Flink', 'Python', 'AWS Kinesis', 'Snowflake'],
-      liveUrl: '#',
-      codeUrl: '#',
+      liveUrl: 'https://github.com/aktma/streamforge',
+      codeUrl: 'https://github.com/aktma/streamforge',
       image: 'https://images.pexels.com/photos/163340/pexels-photo-163340.jpeg?auto=compress&cs=tinysrgb&w=800'
     },
     {
@@ -112,8 +112,8 @@ const CONFIG = {
       category: 'Simulations/Graphics',
       description: 'Real-time ray tracing engine with Vulkan API. Achieves 60fps at 4K with physically-based rendering.',
       tech: ['Rust', 'Vulkan', 'SPIR-V', 'GLSL', 'CUDA'],
-      liveUrl: '#',
-      codeUrl: '#',
+      liveUrl: 'https://github.com/aktma/voxel-raytracer',
+      codeUrl: 'https://github.com/aktma/voxel-raytracer',
       image: 'https://images.pexels.com/photos/373071/pexels-photo-373071.jpeg?auto=compress&cs=tinysrgb&w=800'
     }
   ],
@@ -144,10 +144,12 @@ import ProjectsSection from './components/ProjectsSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+import Analytics from './components/Analytics';
 
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 antialiased overflow-x-hidden">
+      <Analytics />
       <Navigation
         name={CONFIG.name}
         initials={CONFIG.initials}
@@ -166,7 +168,7 @@ export default function App() {
         <ExperienceSection experiences={CONFIG.experiences} />
         <ProjectsSection projects={CONFIG.projects} />
         <TestimonialsSection testimonials={CONFIG.testimonials} />
-        <ContactSection email={CONFIG.email} name={CONFIG.name} />
+        <ContactSection email={CONFIG.email} />
       </main>
       <Footer name={CONFIG.name} initials={CONFIG.initials} />
     </div>

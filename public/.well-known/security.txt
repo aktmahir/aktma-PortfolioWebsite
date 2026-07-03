@@ -1,0 +1,6 @@
+Contact: https://github.com/aktma
+Contact: mailto:aktmahir@gmail.com
+Expires: 2027-12-31T23:59:00.000Z
+Preferred-Languages: en, tr
+Canonical: https://aktma.dev/
+Policy: https://github.com/aktma/aktma-PortfolioWebsite/blob/main/SECURITY.md

@@ -5,6 +5,7 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 interface NavigationProps {
   name: string;
@@ -27,8 +28,13 @@ export default function Navigation({ name, initials, resumeUrl }: NavigationProp
     const element = document.getElementById(id.toLowerCase());
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      trackEvent('nav_click', { section: id.toLowerCase() });
       setIsMobileMenuOpen(false);
     }
+  };
+
+  const handleResumeClick = () => {
+    trackEvent('resume_download');
   };
 
   return (
@@ -64,6 +70,7 @@ export default function Navigation({ name, initials, resumeUrl }: NavigationProp
             ))}
             <a
               href={resumeUrl}
+              onClick={handleResumeClick}
               className="ml-4 flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg transition-all duration-200"
             >
               <Download size={18} />
@@ -73,6 +80,7 @@ export default function Navigation({ name, initials, resumeUrl }: NavigationProp
 
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
             className="md:hidden p-2 text-slate-300 hover:text-white"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -99,6 +107,7 @@ export default function Navigation({ name, initials, resumeUrl }: NavigationProp
                 ))}
                 <a
                   href={resumeUrl}
+                  onClick={handleResumeClick}
                   className="flex items-center gap-2 px-4 py-3 mt-2 mx-4 bg-primary-600 text-white rounded-lg"
                 >
                   <Download size={18} />

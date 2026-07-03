@@ -6,21 +6,28 @@ import {
   Send,
   Github,
   Linkedin,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
 } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 interface ContactSectionProps {
   email: string;
-  name: string;
+  name?: string;
 }
 
-export default function ContactSection({ email, name }: ContactSectionProps) {
+export default function ContactSection({ email }: ContactSectionProps) {
   const [formState, setFormState] = useState({
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
+    'form-name': 'contact',
+    'bot-field': '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -36,15 +43,47 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const subject = encodeURIComponent(formState.subject);
-    const body = encodeURIComponent(
-      `Hi ${name},%0A%0AName: ${formState.name}%0AEmail: ${formState.email}%0ASubject: ${formState.subject}%0AMessage: ${formState.message}`
-    );
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    setSubmitState('submitting');
+
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const params = new URLSearchParams();
+    formData.forEach((value, key) => {
+      if (typeof value === 'string') {
+        params.append(key, value);
+      } else if (value instanceof File) {
+        params.append(key, value.name);
+      }
+    });
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString(),
+      });
+
+      if (response.ok) {
+        setSubmitState('success');
+        trackEvent('form_submit', { form_name: 'contact', status: 'success' });
+        setFormState({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          'form-name': 'contact',
+          'bot-field': '',
+        });
+      } else {
+        setSubmitState('error');
+        trackEvent('form_submit', { form_name: 'contact', status: 'error' });
+      }
+    } catch {
+      setSubmitState('error');
+    }
   };
 
   return (
@@ -110,6 +149,7 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
                 href="https://github.com/aktma"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="GitHub profile"
                 className="p-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-primary-500/50 transition-all group"
               >
                 <Github className="w-6 h-6 text-slate-400 group-hover:text-primary-400 transition-colors" />
@@ -118,12 +158,14 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
                 href="https://linkedin.com/in/mahiraktas"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="LinkedIn profile"
                 className="p-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-primary-500/50 transition-all group"
               >
                 <Linkedin className="w-6 h-6 text-slate-400 group-hover:text-primary-400 transition-colors" />
               </a>
               <a
                 href={`mailto:${email}`}
+                aria-label="Send email"
                 className="p-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-primary-500/50 transition-all group"
               >
                 <Send className="w-6 h-6 text-slate-400 group-hover:text-primary-400 transition-colors" />
@@ -136,7 +178,10 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.3 }}
           >
-            <form onSubmit={handleSubmit} className="glass-card p-8 space-y-6">
+            <form name="contact" onSubmit={handleSubmit} className="glass-card p-8 space-y-6" data-netlify="true" data-netlify-honeypot="bot-field">
+              <input type="hidden" name="form-name" value="contact" />
+              <input type="hidden" name="bot-field" value="" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
@@ -145,10 +190,12 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
                   <input
                     type="text"
                     id="name"
+                    name="name"
                     value={formState.name}
                     onChange={(e) => setFormState(p => ({ ...p, name: e.target.value }))}
                     className={`input-field ${errors.name ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="[Your Name]"
+                    disabled={submitState === 'submitting'}
                   />
                   {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
                 </div>
@@ -159,10 +206,12 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
                   <input
                     type="email"
                     id="email"
+                    name="email"
                     value={formState.email}
                     onChange={(e) => setFormState(p => ({ ...p, email: e.target.value }))}
                     className={`input-field ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="[your.email@domain.com]"
+                    disabled={submitState === 'submitting'}
                   />
                   {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
                 </div>
@@ -175,10 +224,12 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
                 <input
                   type="text"
                   id="subject"
+                  name="subject"
                   value={formState.subject}
                   onChange={(e) => setFormState(p => ({ ...p, subject: e.target.value }))}
                   className={`input-field ${errors.subject ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="[Project inquiry, collaboration, etc.]"
+                  disabled={submitState === 'submitting'}
                 />
                 {errors.subject && <p className="mt-1 text-sm text-red-400">{errors.subject}</p>}
               </div>
@@ -189,11 +240,13 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
                   rows={5}
                   value={formState.message}
                   onChange={(e) => setFormState(p => ({ ...p, message: e.target.value }))}
                   className={`input-field resize-none ${errors.message ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="[Tell me about your project, timeline, and requirements...]"
+                  disabled={submitState === 'submitting'}
                 />
                 {errors.message && <p className="mt-1 text-sm text-red-400">{errors.message}</p>}
               </div>
@@ -201,10 +254,52 @@ export default function ContactSection({ email, name }: ContactSectionProps) {
               <button
                 type="submit"
                 className="w-full btn-primary flex items-center justify-center gap-2"
+                disabled={submitState === 'submitting'}
               >
-                <Send className="w-5 h-5" />
-                Send Message
+                {submitState === 'submitting' && (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Sending...
+                  </>
+                )}
+                {submitState === 'success' && (
+                  <>
+                    <CheckCircle className="w-5 h-5" />
+                    Sent Successfully!
+                  </>
+                )}
+                {submitState === 'error' && (
+                  <>
+                    <AlertCircle className="w-5 h-5" />
+                    Failed - Try Again
+                  </>
+                )}
+                {submitState === 'idle' && (
+                  <>
+                    <Send className="w-5 h-5" />
+                    Send Message
+                  </>
+                )}
               </button>
+
+              {submitState === 'success' && (
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm text-green-400"
+                >
+                  Thank you! I'll get back to you within 24 hours.
+                </motion.p>
+              )}
+              {submitState === 'error' && (
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-sm text-red-400"
+                >
+                  Something went wrong. Please try again or email directly at {email}
+                </motion.p>
+              )}
             </form>
           </motion.div>
         </div>
